@@ -14,3 +14,16 @@ SQLAlchemy is an ORM, psycopg2 is a database driver. These are completely differ
 
 As a rather complex software layer SQLAlchemy does add some overhead but it also is a huge boost to development speed, at least once you learned the library. SQLAlchemy is a excellent library and will teach you the whole ORM concept, but if you don't want to generate SQL statements to begin with then you don't want SQLAlchemy.
 
+3. When exactly do you need to prepend self._ to variable declarations within class methods?
+
+def thing_counter(self, thing):
+    length_of_thing = len(thing)
+    return length_of_thing
+    
+def thing_counter(self, thing):
+    self._length_of_thing = len(thing)
+    return self._length_of_thing
+
+In the first version, length_of_thing will be created inside the function, and the return will return a copy to the caller. length_of_thing itself will not exist anymore after the return.
+
+In the second one, self._length_of_thing will be created, not inside the function, but inside the instance of the class. The result is that it will be visible to all other methods. And the return still returns a copy. So possibly this version uses a little more memory, as the variable self._length_of_thing remains alive till the instance of the class is destroyed.
